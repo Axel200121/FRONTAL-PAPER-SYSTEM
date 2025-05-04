@@ -19,7 +19,10 @@ import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { ApiResponseDto } from '../../interfaces/api.response.dto';
 import { CookieService } from 'ngx-cookie-service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { CheckboxModule } from 'primeng/checkbox';
+import { RippleModule } from 'primeng/ripple';
+import { AppFloatingConfiguratorComponent } from '../../components/app-floating-configurator/app-floating-configurator.component';
 
 
 @Component({
@@ -36,6 +39,7 @@ import { Router } from '@angular/router';
     FloatLabelModule,
     MessageModule,
     Toast,
+    ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfiguratorComponent
   ],
   providers: [MessageService],
   templateUrl: './auth.component.html',
@@ -80,7 +84,7 @@ export class AuthComponent implements OnInit {
       this.executeSetLogin(loginDto);
 
     } else {
-
+      console
       this.isVisibleErrosForm=true
       this.listValidateInputs = this.validateInputs();
 

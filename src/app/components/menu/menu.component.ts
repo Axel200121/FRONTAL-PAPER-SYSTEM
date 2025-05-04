@@ -29,12 +29,12 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Usuarios',
-                    icon: 'pi pi-fw pi-globe',
+                    icon: 'pi pi-fw pi-users',
                     routerLink: ['/landing']
                 },
                 {
                       label: 'Roles',
-                      icon: 'pi pi-fw pi-pencil',
+                      icon: 'pi pi-fw pi-book',
                       routerLink: ['/pages/crud']
                   },
                   {
@@ -44,29 +44,6 @@ export class MenuComponent {
                   },
               ]
           },
-          {
-            label: 'Gestion Usuarios',
-            icon: 'pi pi-fw pi-briefcase',
-            routerLink: ['/pages'],
-            items: [
-                {
-                    label: 'Usuarios',
-                    icon: 'pi pi-fw pi-globe',
-                    routerLink: ['/landing']
-                },
-                {
-                    label: 'Roles',
-                    icon: 'pi pi-fw pi-pencil',
-                    routerLink: ['/pages/crud']
-                },
-                {
-                    label: 'Permisos',
-                    icon: 'pi pi-fw pi-exclamation-circle',
-                    routerLink: ['/pages/notfound']
-                },
-            ]
-        },
-
         {
             label: 'Gestion Productos',
             icon: 'pi pi-fw pi-briefcase',
@@ -74,17 +51,17 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Categorias',
-                    icon: 'pi pi-fw pi-globe',
+                    icon: 'pi pi-fw pi-list',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Prodcutos',
-                    icon: 'pi pi-fw pi-pencil',
+                    icon: 'pi pi-fw pi-box',
                     routerLink: ['/pages/crud']
                 },
                 {
                     label: 'Invetario',
-                    icon: 'pi pi-fw pi-exclamation-circle',
+                    icon: 'pi pi-fw pi-list-check',
                     routerLink: ['/pages/notfound']
                 },
             ]
@@ -97,17 +74,17 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Efectuar compra',
-                    icon: 'pi pi-fw pi-globe',
+                    icon: 'pi pi-fw pi-shopping-bag',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Historico',
-                    icon: 'pi pi-fw pi-pencil',
+                    icon: 'pi pi-fw pi-history',
                     routerLink: ['/pages/crud']
                 },
                 {
                     label: 'Proveedores',
-                    icon: 'pi pi-fw pi-exclamation-circle',
+                    icon: 'pi pi-fw pi-truck',
                     routerLink: ['/pages/notfound']
                 },
             ]
@@ -120,17 +97,17 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Efectuar venta',
-                    icon: 'pi pi-fw pi-globe',
+                    icon: 'pi pi-fw pi-cart-plus',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Historico',
-                    icon: 'pi pi-fw pi-pencil',
+                    icon: 'pi pi-fw pi-history',
                     routerLink: ['/pages/crud']
                 },
                 {
                     label: 'Clientes',
-                    icon: 'pi pi-fw pi-exclamation-circle',
+                    icon: 'pi pi-fw pi-users',
                     routerLink: ['/pages/notfound']
                 },
             ]
@@ -143,17 +120,17 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Auditiar Sistema',
-                    icon: 'pi pi-fw pi-globe',
+                    icon: 'pi pi-fw pi-book',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Mi perfil',
-                    icon: 'pi pi-fw pi-pencil',
+                    icon: 'pi pi-fw pi-user',
                     routerLink: ['/pages/crud']
                 },
                 {
                     label: 'Cerrar sesión',
-                    icon: 'pi pi-fw pi-exclamation-circle',
+                    icon: 'pi pi-fw pi-sign-out',
                     routerLink: ['/pages/notfound']
                 },
             ]

@@ -8,7 +8,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const cookieService = inject(CookieService);
   const router = inject(Router);
   
-  const token = cookieService.get('token');
+  const token = cookieService.get('authToken');
 
   const modifiedReq = token ? req.clone({
     setHeaders: {
@@ -20,7 +20,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     catchError((error: HttpErrorResponse) => {
       if (error.status === 403) {
         // Token expirado o no válido
-        cookieService.delete('token');
+        cookieService.delete('authToken');
         router.navigate(['/login']);
       }
       return throwError(() => error);

@@ -16,10 +16,10 @@ import { LoginDto } from '../../interfaces/login.dto';
 import { AuthService } from './service/auth.service';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { Ripple } from 'primeng/ripple';
 import { Toast } from 'primeng/toast';
 import { ApiResponseDto } from '../../interfaces/api.response.dto';
 import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -49,7 +49,8 @@ export class AuthComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private messageService: MessageService,
-    private cookieService:CookieService
+    private cookieService:CookieService,
+    private router:Router,
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +93,7 @@ export class AuthComponent implements OnInit {
         console.log(response);
         this.cookieService.set('authToken',response.data.token,{expires: response.data.expiresIn, sameSite:'Strict'})
         const data: ApiResponseDto = response;
-        this.toast('success', 'Inicio de sesión exitoso!', data.message);
+        this.toastLogin('success', 'Inicio de sesión exitoso!', data.message);
       },
 
       error: (error) => {
@@ -108,12 +109,28 @@ export class AuthComponent implements OnInit {
     });
   }
 
-  toast(severity: string, summary: string, detail: string) {
+  private toastLogin(severity: string, summary: string, detail: string) {
+    this.messageService.add({
+      severity: severity,
+      summary: summary,
+      detail: detail,
+      life: 2000 // Duración en milisegundos (3 segundos)
+    });
+    // Redirige después de que el toast haya terminado
+    setTimeout(() => {
+      this.router.navigate(['/home']);
+    }, 2000);
+
+  }
+
+  private toast(severity: string, summary: string, detail: string) {
     this.messageService.add({
       severity: severity,
       summary: summary,
       detail: detail,
     });
+
+    setTimeout
   }
 
   private validateInputs() {

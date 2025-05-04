@@ -4,6 +4,7 @@ import { environment } from '../../../../environments/environment.development';
 import { LoginDto } from '../../../interfaces/login.dto';
 import { Observable } from 'rxjs';
 import { ApiResponseDto } from '../../../interfaces/api.response.dto';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,59 +16,22 @@ export class AuthService {
   private tokenKey = 'auth_token';
   private userKey = 'current_user';
 
-  constructor() { }
+  constructor(
+    private _cookie: CookieService
+  ) { }
 
   public executeLogin(loginDto: LoginDto) : Observable<ApiResponseDto>{
     const url = `${this.url}/auth/login`
     return this.http.post<ApiResponseDto>(url,loginDto);
   }
 
-  /**
-   * Almacena el token JWT en el localStorage
-   * @param token Token JWT
-   */
-  private setToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+  public getToken(): string {
+    return this._cookie.get('authToken'); // Recuperar el token
   }
 
-  /**
-   * Obtiene el token JWT almacenado
-   * @returns Token JWT o null si no existe
-   */
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+  public isAuthenticated(): boolean {
+    return !!this.getToken(); // Devuelve true si hay un token
   }
 
-  /**
-   * Almacena la información del usuario en el localStorage
-   * @param user Información del usuario
-  */
-  private setCurrentUser(user: any): void {
-    localStorage.setItem(this.userKey, JSON.stringify(user));
-  }
 
-  /**
-   * Obtiene la información del usuario almacenada
-   * @returns Información del usuario o null si no existe
-  */
-  getCurrentUser(): any {
-    const user = localStorage.getItem(this.userKey);
-    return user ? JSON.parse(user) : null;
-  }
-
-  /**
-   * Verifica si el usuario está autenticado
-   * @returns true si hay un token válido
-  */
-  isAuthenticated(): boolean {
-    return !!this.getToken();
-  }
-
-  /**
-   * Cierra la sesión del usuario
-  */
-  logout(): void {
-    localStorage.removeItem(this.tokenKey);
-    localStorage.removeItem(this.userKey);
-  }
 }

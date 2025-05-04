@@ -1,8 +1,9 @@
+@use '../public/demo/demo.scss';
+@use '../public/layout/layout.scss';
 @use "tailwindcss";
 @use "primeicons/primeicons.css";
 @plugin 'tailwindcss-primeui';
 @layer tailwind, primeng;
-
 *{
     font-family: 'Inter', sans-serif;
 }

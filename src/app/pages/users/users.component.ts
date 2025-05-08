@@ -9,10 +9,11 @@ import { Dialog } from 'primeng/dialog';
 import { RoleDto } from '../../interfaces/role.dto';
 import { RoleService } from '../../services/role.service';
 import { SelectModule } from 'primeng/select';
-import { Table, TableModule } from 'primeng/table';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { AccordionModule } from 'primeng/accordion';
+import { LazyLoadEvent } from 'primeng/api';
 
 @Component({
   selector: 'app-users',
@@ -41,6 +42,12 @@ export class UsersComponent implements OnInit {
   public formUser!:FormGroup
   public visible: boolean = false
   public selectedRole: string | undefined;
+
+  //variables para la paginacion
+  public totalRecords: number = 0
+  public loading: boolean = false
+  public rows: number = 5
+  public first: number = 0
 
 
   @ViewChild('dt') dt!: Table;
@@ -77,13 +84,25 @@ export class UsersComponent implements OnInit {
     this.userService.executeGetListUsers(page, size).subscribe({
       next: (response) => {
         this.listUsers = response.content;
-        console.log(this.listUsers);
+        this.totalRecords = response.totalElements // Total de registros
+        this.loading = false
       },
       error: (error) => {
         console.log(error);
       },
     });
   }
+
+  loadUsers(event: TableLazyLoadEvent) {
+    this.loading = true;
+    // Valores por defecto si event.first o event.rows son undefined
+    const first = event.first || 0;
+    const rows = event.rows || 5; // Asume 10 filas por defecto
+
+    const pageNumber = first / rows; // Cálculo seguro
+    const pageSize = rows;
+    this.executeGetListUser(pageNumber,pageSize)
+}
 
   private executeGetListRoles() {
     this.roleService.executeGetAllRolesBySelect().subscribe({

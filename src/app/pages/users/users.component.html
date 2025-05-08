@@ -42,7 +42,9 @@
     </div>
 
     <div>
-        <p-table [value]="listUsers" stripedRows [tableStyle]="{'min-width': '50rem'}" [rowHover]="true">
+        <p-table [value]="listUsers" [paginator]="true" [rows]="rows" [totalRecords]="totalRecords"
+                [rowsPerPageOptions]="[5, 10, 20]" [lazy]="true" (onLazyLoad)="loadUsers($event)"
+                [loading]="loading"stripedRows [tableStyle]="{'min-width': '50rem'}" [rowHover]="true">
             <ng-template #header>
                 <tr>
                     <th>ID</th>

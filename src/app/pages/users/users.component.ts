@@ -13,13 +13,17 @@ import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { AccordionModule } from 'primeng/accordion';
-import { LazyLoadEvent } from 'primeng/api';
+import { StatusUserDto } from '../../interfaces/status.user.dto';
+import { Tag } from 'primeng/tag';
+import { StatusTranslatePipe } from '../../pipes/StatusTranslatePipe ';
+import { RenameRolesPipe } from '../../pipes/RenameRolesPipe';
 
 @Component({
   selector: 'app-users',
   standalone:true,
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     ButtonModule,
     CommonModule,
     Dialog,
@@ -28,7 +32,10 @@ import { LazyLoadEvent } from 'primeng/api';
     TableModule,
     InputIconModule,
     IconFieldModule,
-    AccordionModule
+    AccordionModule,
+    Tag,
+    StatusTranslatePipe,
+    RenameRolesPipe
     
   ],
   templateUrl: './users.component.html',
@@ -41,13 +48,47 @@ export class UsersComponent implements OnInit {
   public userDialog: boolean = false
   public formUser!:FormGroup
   public visible: boolean = false
-  public selectedRole: string | undefined;
+
 
   //variables para la paginacion
   public totalRecords: number = 0
   public loading: boolean = false
   public rows: number = 5
   public first: number = 0
+
+  //Variables para filtros
+  public selectFilterRole: string = ''
+  public selectFilterStatus:string = ''
+  public textFilter:string = ''
+
+  // crear dto de los status
+  public listStatus: StatusUserDto [] = [
+    {
+      nameKey:"ACTIVE",
+      name:"Activado"
+    },
+    {
+      nameKey:"INACTIVE",
+      name:"Inactivo"
+    },
+    {
+      nameKey:"SUSPENDED",
+      name:"Suspendido"
+    },
+    {
+      nameKey:"SUSPENDED",
+      name:"Suspendido"
+    },
+    {
+      nameKey:"PENDING_ACTIVATION",
+      name:"Pendiente de Activación"
+    },
+    {
+      nameKey:"DELETED",
+      name:"Eliminado"
+    },
+
+  ]
 
 
   @ViewChild('dt') dt!: Table;
@@ -80,8 +121,8 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  private executeGetListUser(page = 0, size = 10) {
-    this.userService.executeGetListUsers(page, size).subscribe({
+  private executeGetListUser(status?:string, role?:string, page = 0, size = 10) {
+    this.userService.executeGetListUsers(page, size, role, status).subscribe({
       next: (response) => {
         this.listUsers = response.content;
         this.totalRecords = response.totalElements // Total de registros
@@ -93,15 +134,26 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  loadUsers(event: TableLazyLoadEvent) {
+  public loadUsers(status?:string, role?:string, event?: TableLazyLoadEvent) {
     this.loading = true;
     // Valores por defecto si event.first o event.rows son undefined
-    const first = event.first || 0;
-    const rows = event.rows || 5; // Asume 10 filas por defecto
-
+    const first = event?.first || 0;
+    const rows = event?.rows || 5; // Asume 10 filas por defecto
     const pageNumber = first / rows; // Cálculo seguro
     const pageSize = rows;
-    this.executeGetListUser(pageNumber,pageSize)
+    this.executeGetListUser(status, role, pageNumber,pageSize)
+}
+
+public filterDataTable(status?:string, role?:string){
+  console.log("valor status", status)
+  console.log("valor role", role)
+  this.loadUsers(status,role)
+}
+
+public clearDataFilter(){
+  this.loadUsers(),
+  this.selectFilterStatus = ''
+  this.selectFilterRole = ''
 }
 
   private executeGetListRoles() {
@@ -114,6 +166,28 @@ export class UsersComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+
+  public getSeverity(status: string) {
+    switch (status) {
+        case 'SUSPENDED':
+            return 'danger';
+
+        case 'ACTIVE':
+            return 'success';
+
+        case 'PENDING_ACTIVATION':
+            return 'warn';
+
+        case 'INACTIVE':
+            return 'info';
+
+        case 'ALMACENERO':
+            return null;
+
+        default:
+          return null;
+    }
   }
 
     showDialog() {

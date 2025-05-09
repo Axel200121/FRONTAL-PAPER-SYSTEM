@@ -297,14 +297,6 @@ export class UsersComponent implements OnInit {
             this.messageService.add({ severity: 'success', summary: 'Proceso Exitoso', detail: 'El usuario se ha registrado de forma exitosa' });
             this.executeSaveUser(userDto)
         },
-        reject: () => {
-            this.messageService.add({
-                severity: 'error',
-                summary: 'Rejected',
-                detail: 'You have rejected',
-                life: 3000,
-            });
-        },
     });
   }
 
@@ -318,14 +310,47 @@ export class UsersComponent implements OnInit {
   }
 
 
-
+  public editProduct() {}
 
 
 
   /**
-   * FUNCIONAES PARA TABLE
+   * TODO: FUNCIONAES PARA ELIMIANR USUARIOS
    */
+  
 
-  public editProduct() {}
-  public deleteProduct() {}
+  private executeDeleteUser(idUser:string){
+    this.userService.executeDeleteUser(idUser).subscribe({
+      next:(response)=>{
+        this.loadUsers()
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        this.toast('error', 'Ocurrio un problema!', error.error.description);
+      }
+    })
+  }
+
+  public confirmDeleteUser(event: Event, idUser:string) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro de que quieres continuar?',
+        header: 'Confirmación',
+        closable: true,
+        closeOnEscape: true,
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: {
+            label: 'No, Cancelar',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptButtonProps: {
+            label: 'Si, Continuar',
+        },
+        accept: () => {
+            this.messageService.add({ severity: 'success', summary: 'Usuario eliminado', detail: 'El usuario ha sido eliminado correctamente' });
+            this.executeDeleteUser(idUser)
+        },
+    });
+  }
 }

@@ -23,6 +23,12 @@ import { StatusUserDto } from '../../interfaces/status.user.dto';
 import { Tag } from 'primeng/tag';
 import { StatusTranslatePipe } from '../../pipes/StatusTranslatePipe ';
 import { RenameRolesPipe } from '../../pipes/RenameRolesPipe';
+import { ValidateInputDto } from '../../interfaces/validate.input.dto';
+import { ApiResponseDto } from '../../interfaces/api.response.dto';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { PasswordModule } from 'primeng/password';
 
 @Component({
   selector: 'app-users',
@@ -40,8 +46,15 @@ import { RenameRolesPipe } from '../../pipes/RenameRolesPipe';
     IconFieldModule,
     AccordionModule,
     Tag,
+    ToastModule,
+    ConfirmDialog,
+    PasswordModule,
     StatusTranslatePipe,
     RenameRolesPipe,
+  ],
+  providers:[
+    ConfirmationService,
+    MessageService
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
@@ -67,6 +80,9 @@ export class UsersComponent implements OnInit {
   //variable visbilidad table
   public isVisibleTable: boolean = true;
 
+  // variables lista de errorer parametros
+  public listValidateInputs: ValidateInputDto[] = []
+  public messageError:string = ''
   // crear dto de los status
   public listStatus: StatusUserDto[] = [
     {
@@ -102,7 +118,9 @@ export class UsersComponent implements OnInit {
   constructor(
     private userService: UserService,
     private roleService: RoleService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private confirmationService: ConfirmationService, 
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -119,11 +137,9 @@ export class UsersComponent implements OnInit {
       next: (response) => {
         this.isVisibleTable = true;
         this.listRoles = response.data;
-        console.log(this.listRoles);
       },
       error: (error) => {
         this.isVisibleTable = false;
-        console.log(error);
       },
     });
   }
@@ -139,7 +155,6 @@ export class UsersComponent implements OnInit {
         this.loading = false;
         this.isVisibleTable = false;
         this.listUsers = [];
-        console.log(error);
       },
     });
   }
@@ -206,10 +221,106 @@ export class UsersComponent implements OnInit {
       role: ['', [Validators.required]],
     });
   }
-  
+
   showDialog() {
     this.visible = true;
   }
+
+  public closeDialog(){
+    this.visible=false
+    this.listValidateInputs = []
+    this.messageError = ''
+    this.formUser.reset()
+  }
+
+  public onSubmitUser(event: Event){
+    if (this.formUser.valid) {
+      let role: RoleDto={
+        id:this.formUser.value.role
+      }
+
+      let user: UserDto = {
+        name: this.formUser.value.name,
+        lastName: this.formUser.value.lastname,
+        password: this.formUser.value.password,
+        confirmPassword: this.formUser.value.confirmpassword,
+        phone: this.formUser.value.phone,
+        email: this.formUser.value.email,
+        address: this.formUser.value.address,
+        role: role
+      }
+      this.listValidateInputs=[]
+      this.confirmUserForm(event,user)
+    } else {
+      this.messageError = 'Tienes campos vacios, verifica por favor'
+    }
+  }
+
+  private executeSaveUser(userDto:UserDto){
+    this.userService.executeSaveUser(userDto).subscribe({
+      next:(response)=>{
+        this.formUser.reset()
+        this.loadUsers()
+        this.closeDialog()
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        if (response.statusCode === 400 && response.message === "Campos invalidos"){
+          this.listValidateInputs = response.data
+        } else if(response.statusCode === 400){
+          this.messageError = response.message
+        }
+        if (error.error.status === 500) {
+          this.toast('error', 'Ocurrio un problema!', error.error.description);
+        }
+      }
+    })
+  }
+
+  public confirmUserForm(event: Event, userDto:UserDto) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro de que quieres continuar?',
+        header: 'Confirmación',
+        closable: true,
+        closeOnEscape: true,
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: {
+            label: 'No, Cancelar',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptButtonProps: {
+            label: 'Si, Continuar',
+        },
+        accept: () => {
+            this.messageService.add({ severity: 'success', summary: 'Proceso Exitoso', detail: 'El usuario se ha registrado de forma exitosa' });
+            this.executeSaveUser(userDto)
+        },
+        reject: () => {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Rejected',
+                detail: 'You have rejected',
+                life: 3000,
+            });
+        },
+    });
+  }
+
+  private toast(severity: string, summary: string, detail: string) {
+    this.messageService.add({
+      severity: severity,
+      summary: summary,
+      detail: detail,
+    });
+    setTimeout
+  }
+
+
+
+
+
 
   /**
    * FUNCIONAES PARA TABLE

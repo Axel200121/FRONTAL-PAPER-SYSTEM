@@ -61,6 +61,9 @@ export class UsersComponent implements OnInit {
   public selectFilterStatus:string = ''
   public textFilter:string = ''
 
+  //variable visbilidad table
+  public isVisibleTable:boolean = true
+
   // crear dto de los status
   public listStatus: StatusUserDto [] = [
     {
@@ -129,6 +132,9 @@ export class UsersComponent implements OnInit {
         this.loading = false
       },
       error: (error) => {
+        this.loading = false
+        this.isVisibleTable = false
+        this.listUsers = []
         console.log(error);
       },
     });
@@ -159,10 +165,12 @@ public clearDataFilter(){
   private executeGetListRoles() {
     this.roleService.executeGetAllRolesBySelect().subscribe({
       next: (response) => {
+        this.isVisibleTable=true
         this.listRoles = response.data
         console.log(this.listRoles);
       },
       error: (error) => {
+        this.isVisibleTable=false
         console.log(error);
       },
     });

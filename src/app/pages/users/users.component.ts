@@ -60,9 +60,14 @@ import { PasswordModule } from 'primeng/password';
   styleUrl: './users.component.scss',
 })
 export class UsersComponent implements OnInit {
+
+  // Inicializar lista para tabla usuarios y select roles
   public listUsers!: UserDto[];
   public listRoles!: RoleDto[];
-  public userDialog: boolean = false;
+
+  // variables para formulario
+  public isEditForm : boolean = false
+  public idUser:string = ''
   public formUser!: FormGroup;
   public visible: boolean = false;
 
@@ -222,8 +227,26 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  showDialog() {
+  public showDialog(userDto?: UserDto) {
     this.visible = true;
+    if(userDto === undefined || userDto === null){
+      this.isEditForm = false
+      this.formUser.reset()
+    }else{
+      this.isEditForm = true
+      this.idUser = userDto.id || ''
+      console.log("user pae edit", userDto)
+      this.formUser = this.formBuilder.group({
+        name: [userDto.name || '', [Validators.required]],
+        lastname: [userDto.lastName || '', [Validators.required]],
+        phone: [userDto.phone || '', [Validators.required]],
+        email: [userDto.email || '', [Validators.required]],
+        password: ['', [Validators.required]],
+        confirmpassword: ['', [Validators.required]],
+        address: [userDto.address || '', [Validators.required]],
+        role: [userDto.role?.id || '', [Validators.required]],
+      });
+    }
   }
 
   public closeDialog(){
@@ -250,7 +273,7 @@ export class UsersComponent implements OnInit {
         role: role
       }
       this.listValidateInputs=[]
-      this.confirmUserForm(event,user)
+      this.confirmUserForm(event, user, this.idUser)
     } else {
       this.messageError = 'Tienes campos vacios, verifica por favor'
     }
@@ -277,7 +300,28 @@ export class UsersComponent implements OnInit {
     })
   }
 
-  public confirmUserForm(event: Event, userDto:UserDto) {
+  private executeUpdateUser(idUser:string, userDto:UserDto){
+    this.userService.executeUpdateUser(idUser, userDto).subscribe({
+      next:(response)=>{
+        this.formUser.reset()
+        this.loadUsers()
+        this.closeDialog()
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        if (response.statusCode === 400 && response.message === "Campos invalidos"){
+          this.listValidateInputs = response.data
+        } else if(response.statusCode === 400){
+          this.messageError = response.message
+        }
+        if (error.error.status === 500) {
+          this.toast('error', 'Ocurrio un problema!', error.error.description);
+        }
+      }
+    })
+  }
+
+  public confirmUserForm(event: Event, userDto:UserDto, idUser?:string) {
     this.confirmationService.confirm({
         target: event.target as EventTarget,
         message: '¿Estás seguro de que quieres continuar?',
@@ -294,8 +338,14 @@ export class UsersComponent implements OnInit {
             label: 'Si, Continuar',
         },
         accept: () => {
-            this.messageService.add({ severity: 'success', summary: 'Proceso Exitoso', detail: 'El usuario se ha registrado de forma exitosa' });
+          if(idUser === null || idUser === '' || idUser === undefined){
+            this.messageService.add({ severity: 'success', summary: 'Registro Exitoso', detail: 'El usuario se ha registrado de forma exitosa' });
             this.executeSaveUser(userDto)
+          }else{
+            this.messageService.add({ severity: 'success', summary: 'Actualización exitosa', detail: 'El usuario se actualizo de forma exitosa' });
+            this.executeUpdateUser(idUser, userDto)
+          }
+            
         },
     });
   }
@@ -308,11 +358,6 @@ export class UsersComponent implements OnInit {
     });
     setTimeout
   }
-
-
-  public editProduct() {}
-
-
 
   /**
    * TODO: FUNCIONAES PARA ELIMIANR USUARIOS
@@ -353,4 +398,9 @@ export class UsersComponent implements OnInit {
         },
     });
   }
+
+  public getMessageForm(){
+    return this.isEditForm ? 'Edita la información del usuario' : 'Ingresa la sigueinte información'
+  }
+
 }

@@ -53,7 +53,7 @@
                     </td>
                     <td>
                         <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true"
-                            (click)="editProduct()" />
+                            (click)="showDialog(user)" />
                         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true"
                             (click)="confirmDeleteUser($event, user.id)" />
                     </td>
@@ -76,9 +76,9 @@
 
 
 <div class=" flex justify-center">
-    <p-dialog header="Nuevo Usuario" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }">
+    <p-dialog [header]="isEditForm ? 'Editar Usuario' : 'Nuevo Usuario'" [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }">
         <form action="" [formGroup]="formUser">
-            <span class="p-text-secondary block mb-8">Ingresa la sigueinte información</span>
+            <span class="p-text-secondary block mb-8">{{getMessageForm()}}</span>
             @if (listValidateInputs.length > 0) {
                 <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                     <ul class="list-disc pl-3">
@@ -157,7 +157,7 @@
 
             <div class="flex justify-end gap-2 mt-10">
                 <p-button label="Cancelar" severity="secondary" (click)="closeDialog()" />
-                <p-button label="Guardar" (click)="onSubmitUser($event)"  />
+                <p-button [label]="isEditForm ? 'Editar' : 'Guardar'" (click)="onSubmitUser($event)"  />
             </div>
         </form>
     </p-dialog>

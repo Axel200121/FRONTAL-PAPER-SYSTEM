@@ -265,8 +265,17 @@ export class PermissionsComponent implements OnInit {
               
           },
       });
-    }
+  }
 
+  public getMessageForm(){
+    return this.isEditForm ? 'Edita la información del usuario' : 'Ingresa la sigueinte información'
+  }
+
+
+
+  /**
+   * TODO: USANDO TOAST
+   */
 
   private toast(severity: string, summary: string, detail: string) {
     this.messageService.add({
@@ -277,9 +286,45 @@ export class PermissionsComponent implements OnInit {
     setTimeout
   }
 
+  /**
+   * TODO: FUNCIONES PARA ELIMINAR
+   */
+  private executeDeletePermission(id:string){
+    this.permissionService.executeDeletePermission(id).subscribe({
+      next:(response)=>{
+        this.first = 0 // Vuelve a la primera página
+        this.rows = 5
+        this.loadPermissions()
+        this.messageService.add({ severity: 'success', summary: 'Permiso eliminado', detail: 'Permiso eliminado correctamente' });
 
-  public getMessageForm(){
-    return this.isEditForm ? 'Edita la información del usuario' : 'Ingresa la sigueinte información'
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        this.toast('error', 'Ocurrio un problema!', error.error.description);
+      }
+    })
+  }
+
+  public confirmDeletePermission(event: Event, id:string) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro de que quieres continuar?',
+        header: 'Confirmación',
+        closable: true,
+        closeOnEscape: true,
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: {
+            label: 'No, Cancelar',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptButtonProps: {
+            label: 'Si, Continuar',
+        },
+        accept: () => {
+            this.executeDeletePermission(id)
+        },
+    });
   }
 
   

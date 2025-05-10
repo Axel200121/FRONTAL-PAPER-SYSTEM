@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Inject, Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment.development';
 import { PermissionDto } from '../../../interfaces/permission.dto';
 import { Observable } from 'rxjs';
@@ -11,19 +11,19 @@ import { ApiResponseDto } from '../../../interfaces/api.response.dto';
 export class PermissionService {
 
 
-  private http = Inject(HttpClient)
+  private http = inject(HttpClient)
   private url = environment.apiUrl
   constructor() { }
 
 
   public executeSavePermission(permissionDto:PermissionDto):Observable<ApiResponseDto>{
     const url = `${this.url}/permissions/save`
-    return this.http.post(url,permissionDto)
+    return this.http.post<ApiResponseDto>(url,permissionDto)
   }
 
   public executeUpdatePermission(id:string, permissionDto:PermissionDto):Observable<ApiResponseDto>{
     const url = `${this.url}/permissions/update/${id}`
-    return this.http.put(url, permissionDto);
+    return this.http.put<ApiResponseDto>(url, permissionDto);
   }
 
   public executeListPermissions(page:number, size:number, status?:string, idPermission?:string):Observable<any>{
@@ -41,14 +41,14 @@ export class PermissionService {
     return this.http.get(url,{params})
   }
 
-  public executeGetRole(id:string):Observable<ApiResponseDto>{
+  public executeGetPermission(id:string):Observable<ApiResponseDto>{
     const url = `${this.url}/permissions/get/${id}`
-    return this.http.get(url)
+    return this.http.get<ApiResponseDto>(url)
   }
 
   public executeDeletePermission(id:string):Observable<ApiResponseDto>{
     const url = `${this.url}/permissions/delete/${id}`
-    return this.http.delete(url)
+    return this.http.delete<ApiResponseDto>(url)
   }
 
 

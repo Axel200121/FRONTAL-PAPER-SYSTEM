@@ -8,6 +8,7 @@ export class StatusTranslatePipe implements PipeTransform {
         SUSPENDED: 'Suspendido',
         ACTIVE: 'Activo',
         PENDING_ACTIVATION: 'Pendiente de activación',
+        PENDING: 'Pendiente',
         INACTIVE: 'Inactivo',
         DELETED: 'Eliminado',
     };

@@ -34,12 +34,12 @@ export class MenuComponent {
                 {
                       label: 'Roles',
                       icon: 'pi pi-fw pi-pencil',
-                      routerLink: ['/pages/crud']
+                      routerLink: ['/home/roles']
                   },
                   {
                       label: 'Permisos',
                       icon: 'pi pi-fw pi-exclamation-circle',
-                      routerLink: ['/pages/notfound']
+                      routerLink: ['/home/permissions']
                   },
               ]
           },

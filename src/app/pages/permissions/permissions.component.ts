@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PermissionDto } from '../../interfaces/permission.dto';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { PermissionService } from './service/permission.service';
 import { ButtonModule } from 'primeng/button';
@@ -17,12 +17,14 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { StatusUserDto } from '../../interfaces/status.user.dto';
 import { StatusRegisterDto } from '../../interfaces/status.register.dto';
+import { PermissionTranslatePipe } from '../../pipes/PermissionTranslatePipe';
 
 @Component({
   selector: 'app-permissions',
   imports: [
     CommonModule,
     StatusTranslatePipe,
+    PermissionTranslatePipe,
     ButtonModule,
     Tag,
     TableModule,
@@ -31,6 +33,7 @@ import { StatusRegisterDto } from '../../interfaces/status.register.dto';
     Dialog,
     InputTextModule,
     SelectModule,
+    FormsModule,
     ToastModule,
     ConfirmDialog
   ],
@@ -59,7 +62,11 @@ export class PermissionsComponent implements OnInit {
   public listValidateInputs:ValidateInputDto[] = []
   public messageErrorForm : string  = ''
 
-  //* Lista de status
+  //* Lista para Filtros
+  
+  public lsitPermissionsBySelect!:PermissionDto[]
+  public selectedPermisison : string = ''
+  public selectedStatus : string = ''
   public listStatus: StatusRegisterDto[] = [
     {
       nameKey:'ACTIVE',
@@ -91,6 +98,7 @@ export class PermissionsComponent implements OnInit {
   ngOnInit(): void {
     this.executeListPermissions()
     this.initFormPermission()
+    this.executeListPermissionBySelect()
   }
 
   /**
@@ -98,7 +106,7 @@ export class PermissionsComponent implements OnInit {
    */
 
   public executeListPermissions(page = 0, size = 5, status?:string, idPermission?:string){
-    this.permissionService.executeListPermissions(page,size).subscribe({
+    this.permissionService.executeListPermissions(page,size,status,idPermission).subscribe({
       next:(response)=>{
         this.listPermissions = response.content
         this.totalRecords = response.totalElements
@@ -325,6 +333,32 @@ export class PermissionsComponent implements OnInit {
             this.executeDeletePermission(id)
         },
     });
+  }
+
+  /**
+   * TODO: FUNCIONES PARA FILTRAR INFORMACIÓN
+   */
+
+  public executeListPermissionBySelect(){
+    this.permissionService.executeListPermissionsBySelect().subscribe({
+      next : (response)=>{
+        this.lsitPermissionsBySelect = response.data
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        this.toast('error', 'Ocurrio un problema!', error.error.description);
+      }
+    })
+  }
+
+  public filterDataTable(status?: string, permission?: string) {
+    this.loadPermissions(status, permission);
+  }
+
+  public clearDataFilter() {
+    this.loadPermissions(),
+    this.selectedPermisison = ''
+    this.selectedStatus = ''
   }
 
   

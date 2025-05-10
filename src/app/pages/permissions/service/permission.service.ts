@@ -41,6 +41,11 @@ export class PermissionService {
     return this.http.get(url,{params})
   }
 
+  public executeListPermissionsBySelect():Observable<ApiResponseDto>{
+    const url = `${this.url}/permissions/alls/select`
+    return this.http.get<ApiResponseDto>(url)
+  }
+
   public executeGetPermission(id:string):Observable<ApiResponseDto>{
     const url = `${this.url}/permissions/get/${id}`
     return this.http.get<ApiResponseDto>(url)

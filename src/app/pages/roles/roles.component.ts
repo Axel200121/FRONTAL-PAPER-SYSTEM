@@ -29,7 +29,6 @@ import { PermissionTranslatePipe } from '../../pipes/PermissionTranslatePipe';
     Tag,
     StatusTranslatePipe,
     RenameRolesPipe,
-    PermissionTranslatePipe,
 
     FormsModule,
     ReactiveFormsModule,
@@ -39,7 +38,6 @@ import { PermissionTranslatePipe } from '../../pipes/PermissionTranslatePipe';
     SelectModule,
     InputTextModule,
     AccordionModule,
-    Checkbox
   ],
   providers:[MessageService,ConfirmationService],
   templateUrl: './roles.component.html',

@@ -19,7 +19,7 @@ export class RoleService {
     return this.http.get<ApiResponseDto>(url);
   }
 
-  public executeGetListRoles(page:string, size:string, role?:string, status?:string,):Observable<any>{
+  public executeGetListRoles(page:number, size:number, role?:string, status?:string,):Observable<any>{
     let params = new HttpParams()
     .set('page',page.toString())
     .set('size', size.toString())

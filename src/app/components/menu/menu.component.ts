@@ -43,7 +43,7 @@ export class MenuComponent {
                   },
               ]
           },
-        /*{
+        {
             label: 'Gestion Productos',
             icon: 'pi pi-fw pi-briefcase',
             routerLink: ['/pages'],
@@ -133,7 +133,7 @@ export class MenuComponent {
                     routerLink: ['/pages/notfound']
                 },
             ]
-        },*/
+        },
     ];
 }
 }

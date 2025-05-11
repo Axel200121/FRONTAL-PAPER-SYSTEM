@@ -17,7 +17,7 @@ export class MenuComponent {
   ngOnInit() {
       this.model = [
         {
-            label: 'UI Components',
+            label: 'Home',
             items: [
                 { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/home'] },
             ]
@@ -25,43 +25,42 @@ export class MenuComponent {
         {
             label: 'Gestion Usuarios',
             icon: 'pi pi-fw pi-briefcase',
-            routerLink: ['/pages'],
             items: [
                 {
                     label: 'Usuarios',
-                    icon: 'pi pi-fw pi-users',
-                    routerLink: ['/landing']
+                    icon: 'pi pi-fw pi-globe',
+                    routerLink: ['/home/users']
                 },
                 {
                       label: 'Roles',
-                      icon: 'pi pi-fw pi-book',
-                      routerLink: ['/pages/crud']
+                      icon: 'pi pi-fw pi-pencil',
+                      routerLink: ['/home/roles']
                   },
                   {
                       label: 'Permisos',
                       icon: 'pi pi-fw pi-exclamation-circle',
-                      routerLink: ['/pages/notfound']
+                      routerLink: ['/home/permissions']
                   },
               ]
           },
-        {
+        /*{
             label: 'Gestion Productos',
             icon: 'pi pi-fw pi-briefcase',
             routerLink: ['/pages'],
             items: [
                 {
                     label: 'Categorias',
-                    icon: 'pi pi-fw pi-list',
+                    icon: 'pi pi-fw pi-globe',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Prodcutos',
-                    icon: 'pi pi-fw pi-box',
+                    icon: 'pi pi-fw pi-pencil',
                     routerLink: ['/pages/crud']
                 },
                 {
                     label: 'Invetario',
-                    icon: 'pi pi-fw pi-list-check',
+                    icon: 'pi pi-fw pi-exclamation-circle',
                     routerLink: ['/pages/notfound']
                 },
             ]
@@ -74,17 +73,17 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Efectuar compra',
-                    icon: 'pi pi-fw pi-shopping-bag',
+                    icon: 'pi pi-fw pi-globe',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Historico',
-                    icon: 'pi pi-fw pi-history',
+                    icon: 'pi pi-fw pi-pencil',
                     routerLink: ['/pages/crud']
                 },
                 {
                     label: 'Proveedores',
-                    icon: 'pi pi-fw pi-truck',
+                    icon: 'pi pi-fw pi-exclamation-circle',
                     routerLink: ['/pages/notfound']
                 },
             ]
@@ -97,17 +96,17 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Efectuar venta',
-                    icon: 'pi pi-fw pi-cart-plus',
+                    icon: 'pi pi-fw pi-globe',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Historico',
-                    icon: 'pi pi-fw pi-history',
+                    icon: 'pi pi-fw pi-pencil',
                     routerLink: ['/pages/crud']
                 },
                 {
                     label: 'Clientes',
-                    icon: 'pi pi-fw pi-users',
+                    icon: 'pi pi-fw pi-exclamation-circle',
                     routerLink: ['/pages/notfound']
                 },
             ]
@@ -120,12 +119,12 @@ export class MenuComponent {
             items: [
                 {
                     label: 'Auditiar Sistema',
-                    icon: 'pi pi-fw pi-book',
+                    icon: 'pi pi-fw pi-globe',
                     routerLink: ['/landing']
                 },
                 {
                     label: 'Mi perfil',
-                    icon: 'pi pi-fw pi-user',
+                    icon: 'pi pi-fw pi-pencil',
                     routerLink: ['/pages/crud']
                 },
                 {
@@ -134,7 +133,7 @@ export class MenuComponent {
                     routerLink: ['/pages/notfound']
                 },
             ]
-        },
+        },*/
     ];
 }
 }

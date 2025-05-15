@@ -14,10 +14,16 @@ export class ClientService {
   private url = environment.apiUrl
   constructor() { }
 
-  public executeListClients(page:number, size:number):Observable<any>{
+  public executeListClients(page:number, size:number, idClient?:string, status?:string):Observable<any>{
     let params = new HttpParams()
     .set('page', page.toString())
     .set('size', size.toString())
+
+    if (status || idClient) {
+      params = params
+      .set('idCustomer', idClient!.toString())
+      .set('status', status!.toString())
+    }
 
     const url = `${this.url}/customers/alls`
     return this.http.get(url, {params})

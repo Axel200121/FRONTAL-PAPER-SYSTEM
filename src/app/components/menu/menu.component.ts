@@ -107,7 +107,7 @@ export class MenuComponent {
                 {
                     label: 'Clientes',
                     icon: 'pi pi-fw pi-exclamation-circle',
-                    routerLink: ['/pages/notfound']
+                    routerLink: ['/home/clients']
                 },
             ]
         },

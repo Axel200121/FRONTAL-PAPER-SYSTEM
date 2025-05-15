@@ -30,7 +30,7 @@
 
     <div>
         <p-table [value]="listCustomers" [paginator]="true" [rows]="rows" [totalRecords]="totalRecords"
-                [rowsPerPageOptions]="[5, 10, 20]" [lazy]="true" (onLazyLoad)="loadPermissions(undefined, undefined, $event)"
+                [rowsPerPageOptions]="[5, 10, 20]" [lazy]="true" (onLazyLoad)="loadClients(undefined, undefined, $event)"
                 [loading]="loading"stripedRows [tableStyle]="{'min-width': '40rem'}" [rowHover]="true" [(first)]="first" >
             <ng-template #header>
                 <tr>
@@ -53,7 +53,7 @@
                     </td>
                     <td>
                         <p-button icon="pi pi-pencil" class="mr-2" (onClick)="showFormModal(customer)" [rounded]="true" [outlined]="true"/>
-                        <p-button icon="pi pi-trash" severity="danger"  [rounded]="true" [outlined]="true"/>
+                        <p-button icon="pi pi-trash" severity="danger" (onClick)="confirmDeleteClient($event, customer.id)"  [rounded]="true" [outlined]="true"/>
                     </td>
                 </tr>
             </ng-template>

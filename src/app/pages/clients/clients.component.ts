@@ -156,7 +156,7 @@ export class ClientsComponent implements OnInit {
         this.first = 0; // Vuelve a la primera página
         this.rows = 5;  // Asegura que rows sea 5
         this.formClient.reset(),
-        this.loadPermissions()
+        this.loadClients()
         this.closeDialog()
         this.messageService.add({ severity: 'success', summary: 'Registro Exitoso', detail: 'El cliente se ha registrado de forma exitosa' });
       },
@@ -181,7 +181,7 @@ export class ClientsComponent implements OnInit {
         this.first = 0 // Vuelve a la primera página
         this.rows = 5  // Asegura que rows sea 5
         this.formClient.reset(),
-        this.loadPermissions()
+        this.loadClients()
         this.closeDialog()
         this.messageService.add({ severity: 'success', summary: 'Actualización exitosa', detail: 'El cliente se actualizo de forma exitosa' });
       },
@@ -250,7 +250,7 @@ export class ClientsComponent implements OnInit {
     });
   }
 
-  public loadPermissions(status?: string,idClient?: string,event?: TableLazyLoadEvent) {
+  public loadClients(status?: string,idClient?: string,event?: TableLazyLoadEvent) {
     this.loading = true;
     // Valores por defecto si event.first o event.rows son undefined
     const first = event?.first || 0;
@@ -302,12 +302,13 @@ export class ClientsComponent implements OnInit {
   }
 
   public filterDataTable(status?: string, permission?: string) {
-    this.loadPermissions(status, permission);
+    this.loadClients(status, permission);
   }
 
   public clearDataFilter() {
-    this.loadPermissions(), (this.selectedClient = '');
-    this.selectedStatus = '';
+    this.loadClients()
+    this.selectedClient = ''
+    this.selectedStatus = ''
   }
 
   /**
@@ -322,4 +323,46 @@ export class ClientsComponent implements OnInit {
     });
     setTimeout;
   }
+
+
+  /**
+   * TODO: FUNCIONAES PARA ELIMIANR CLIENTES
+   */
+  
+
+  private executeDeleteClient(idClient:string){
+    this.clientService.executeDeleteClient(idClient).subscribe({
+      next:(response)=>{
+        this.loadClients()
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        this.toast('error', 'Ocurrio un problema!', error.error.description);
+      }
+    })
+  }
+
+  public confirmDeleteClient(event: Event, idClient:string) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro de que quieres continuar?',
+        header: 'Confirmación',
+        closable: true,
+        closeOnEscape: true,
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: {
+            label: 'No, Cancelar',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptButtonProps: {
+            label: 'Si, Continuar',
+        },
+        accept: () => {
+            this.messageService.add({ severity: 'success', summary: 'Cliente eliminado', detail: 'El cliente ha sido eliminado correctamente' });
+            this.executeDeleteClient(idClient)
+        },
+    });
+  }
+
 }

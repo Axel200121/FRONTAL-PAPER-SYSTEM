@@ -43,7 +43,7 @@ export class MenuComponent {
                   },
               ]
           },
-        /*{
+        {
             label: 'Gestion Productos',
             icon: 'pi pi-fw pi-briefcase',
             routerLink: ['/pages'],
@@ -107,7 +107,7 @@ export class MenuComponent {
                 {
                     label: 'Clientes',
                     icon: 'pi pi-fw pi-exclamation-circle',
-                    routerLink: ['/pages/notfound']
+                    routerLink: ['/home/clients']
                 },
             ]
         },
@@ -133,7 +133,7 @@ export class MenuComponent {
                     routerLink: ['/pages/notfound']
                 },
             ]
-        },*/
+        },
     ];
 }
 }

@@ -93,6 +93,46 @@ export class CategoryComponent  implements OnInit{
   }
 
   /**
+   * TODO: FUNCIONAES PARA ELIMIANR CLIENTES
+   */
+  
+
+  private executeDeleteCategory(idCategory:string){
+    this.categoryService.executeDeleteCategory(idCategory).subscribe({
+      next:(response)=>{
+        this.loadCategories()
+        this.messageService.add({ severity: 'success', summary: 'Categoria eliminada', detail: 'Categoria ha sido eliminado correctamente' });
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        this.toast('error', 'Ocurrio un problema!', error.error.description);
+      }
+    })
+  }
+
+  public confirmDeleteCategory(event: Event, idCategory:string) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro de que quieres continuar?',
+        header: 'Confirmación',
+        closable: true,
+        closeOnEscape: true,
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: {
+            label: 'No, Cancelar',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptButtonProps: {
+            label: 'Si, Continuar',
+        },
+        accept: () => {
+            this.executeDeleteCategory(idCategory)
+        },
+    });
+  }
+
+  /**
    * TODO: METODOS PARA AGREGA O ACTUALIZAR CLIENTES
    */
   private initFormCategory(category?:CategoryDto){

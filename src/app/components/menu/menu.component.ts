@@ -51,7 +51,7 @@ export class MenuComponent {
                 {
                     label: 'Categorias',
                     icon: 'pi pi-fw pi-globe',
-                    routerLink: ['/landing']
+                    routerLink: ['/home/categories']
                 },
                 {
                     label: 'Prodcutos',

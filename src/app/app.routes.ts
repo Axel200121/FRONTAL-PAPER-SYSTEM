@@ -8,6 +8,7 @@ import { PermissionsComponent } from './pages/permissions/permissions.component'
 import { RolesComponent } from './pages/roles/roles.component';
 import { ClientsComponent } from './pages/clients/clients.component';
 import { CategoryComponent } from './pages/category/category.component';
+import { ProviderComponent } from './pages/provider/provider.component';
 
 export const routes: Routes = [
     { 
@@ -47,6 +48,10 @@ export const routes: Routes = [
             {
                 path:'categories',
                 component:CategoryComponent  
+            },
+            {
+                path:'providers',
+                component:ProviderComponent
             },
             {
                 path:'',

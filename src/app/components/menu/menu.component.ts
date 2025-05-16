@@ -69,7 +69,6 @@ export class MenuComponent {
         {
             label: 'Gestion Compras',
             icon: 'pi pi-fw pi-briefcase',
-            routerLink: ['/pages'],
             items: [
                 {
                     label: 'Efectuar compra',
@@ -84,7 +83,7 @@ export class MenuComponent {
                 {
                     label: 'Proveedores',
                     icon: 'pi pi-fw pi-exclamation-circle',
-                    routerLink: ['/pages/notfound']
+                    routerLink: ['/home/providers']
                 },
             ]
         },

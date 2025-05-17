@@ -98,6 +98,46 @@ export class ProviderComponent implements OnInit {
   }
 
   /**
+   * TODO: FUNCIONAES PARA ELIMIANR PROVEEDORES
+  */
+  
+
+  private executeDeleteProvider(idProvider:string){
+    this.providerService.executeDeleteProvider(idProvider).subscribe({
+      next:(response)=>{
+        this.loadProviders()
+        this.messageService.add({ severity: 'success', summary: 'Proveedor eliminada', detail: 'El proveedotr ha sido eliminado correctamente' });
+      },
+      error:(error)=>{
+        const response:ApiResponseDto = error.error
+        this.toast('error', 'Ocurrio un problema!', error.error.description);
+      }
+    })
+  }
+
+  public confirmDeleteProvider(event: Event, idProvider:string) {
+    this.confirmationService.confirm({
+        target: event.target as EventTarget,
+        message: '¿Estás seguro de que quieres continuar?',
+        header: 'Confirmación',
+        closable: true,
+        closeOnEscape: true,
+        icon: 'pi pi-exclamation-triangle',
+        rejectButtonProps: {
+            label: 'No, Cancelar',
+            severity: 'secondary',
+            outlined: true,
+        },
+        acceptButtonProps: {
+            label: 'Si, Continuar',
+        },
+        accept: () => {
+            this.executeDeleteProvider(idProvider)
+        },
+    });
+  }
+
+  /**
    * TODO: METODOS PARA AGREGA O ACTUALIZAR PROVEEDORES
    */
   private initFormProvider(provider?:ProviderDto){

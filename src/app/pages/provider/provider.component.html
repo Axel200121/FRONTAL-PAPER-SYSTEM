@@ -1,0 +1,136 @@
+<div class="card">
+    <div class="font-semibold text-3xl mb-4">
+        Panel de Control de Proveedores
+    </div>
+    <div class="w-full pt-4">
+        <p class="text-2xl font-semibold">Filtrar Información</p>
+        <div class="mb-4 grid grid-cols-1 md:grid-cols-2 md:gap-6 gap-0">
+            <div class="w-full">
+                <label for="name" class="block mb-1 font-semibold w-full">Seleccione un Proveedor</label>
+                <p-select [options]="listProvidersBySelect" [(ngModel)]="selectedProvider" optionValue="id" optionLabel="name" [filter]="true"
+                    filterBy="name" [showClear]="true" placeholder="Seleccione un Proveedor"
+                    class="flex-auto w-full py-2" />
+            </div>
+            <div class="w-full">
+                <label for="name" class="block mb-1 font-semibold w-full">Seleccione un Estado</label>
+                <p-select [options]="listStatus" [(ngModel)]="selectedStatus" optionValue="nameKey" optionLabel="name" [filter]="true"
+                    filterBy="name" [showClear]="true" placeholder="Seleccione un Estado"
+                    class="flex-auto w-full py-2" />
+            </div>
+        </div>
+        <div class="flex justify-start gap-2">
+            <p-button label="Buscar" (onClick)="filterDataTable(selectedProvider, selectedStatus)"/>
+            <p-button label="Limpiar" severity="secondary" (onClick)="clearDataFilter()"/>
+        </div>
+    
+    </div>
+
+    <div class="my-5">
+        <p-button label="Nuevo Proveedor" (onClick)="showFormModal()" />
+    </div>
+
+    <div>
+        <p-table [value]="listProviders" [paginator]="true" [rows]="rows" [totalRecords]="totalRecords"
+                [rowsPerPageOptions]="[5, 10, 20]" [lazy]="true" (onLazyLoad)="loadProviders(undefined, undefined, $event)"
+                [loading]="loading"stripedRows [tableStyle]="{'min-width': '40rem'}" [rowHover]="true" [(first)]="first" >
+            <ng-template #header>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th style="width:20%">Dirección</th>
+                    <th>Telefono</th>
+                    <th>Correo Electronico</th>
+                    <th>Status</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-provider>
+                <tr>
+                    <td>{{provider.id.slice(-12)}}</td>
+                    <td>{{provider.name}}</td>
+                    <td >{{provider.address}}</td>
+                    <td>{{provider.phone}}</td>
+                    <td>{{provider.email}}</td>
+                    <td>
+                        <p-tag [value]="provider.status | translateStatus " [severity]="getSeverity(provider.status)" />
+                    </td>
+                    <td>
+                        <p-button icon="pi pi-pencil" class="mr-2" (onClick)="showFormModal(provider)"   [rounded]="true" [outlined]="true"/>
+                        <p-button icon="pi pi-trash" severity="danger" (onClick)="confirmDeleteProvider($event,provider.id)"  [rounded]="true" [outlined]="true"/>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div class="flex flex-col items-center justify-center">
+                            <img class="w-40 h-40 md:w-60 md:h-60 -mb-6" src="images/empty-table.svg" alt="Sin registros">
+                            <h3 class="text-xl font-semibold text-gray-600">No se encontraron registros</h3>
+                            <p class="text-gray-500">Parece que aún no hay datos disponibles. Intenta agregar un nuevo registro o actualizar la tabla.</p>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+<div class=" flex justify-center">
+    <p-dialog [header]="isEditForm ? 'EDITAR PROVEEDOR' : 'NUEVO PROVEEDOR'" [modal]="true" [(visible)]="isVisibleForm" [style]="{ width: '50rem' }">
+        <form action="" [formGroup]="formProvider">
+            <span class="p-text-secondary block mb-8">{{getMessageForm()}}</span>
+            @if (listValidateInputs.length > 0 || messageErrorForm) {
+                <div class="bg-red-100 border border-red-400 text-red-600 px-4 py-3 rounded mb-4">
+                    <ul class="list-disc pl-3">
+                        @for (item of listValidateInputs; track $index) {
+                            <li class="font-semibold text-sm"> {{item.inputValidatedMessage}} </li>
+                        }
+                    </ul>
+                    <ul class="list-disc pl-3">
+                        <li class="font-semibold text-sm">{{messageErrorForm}} </li>
+                    </ul>  
+                </div>
+            }
+         
+            <section class="flex flex-row gap-4">
+                <div class="w-full">
+                    <label for="name" class="block mb-1 font-semibold w-full">Nombre completo</label>
+                    <input formControlName="name" pInputText id="name" class="flex-auto w-full py-4" autocomplete="off"
+                        placeholder="Ingresa nombre del proveedor" />
+                </div>
+                <div class="w-full">
+                    <label for="phone" class="block mb-1 font-semibold w-full">Numero Telefonico</label>
+                    <input formControlName="phone" pInputText id="name" class="flex-auto w-full py-4" autocomplete="off"
+                        placeholder="Ingresa un numero telefonico" />
+                </div>
+            </section>
+            <section class="flex flex-row gap-4 mt-10">
+                <div class="w-full">
+                    <label for="email" class="block mb-1 font-semibold w-full">Correo Electronico</label>
+                    <input formControlName="email" pInputText id="name" class="flex-auto w-full py-4" autocomplete="off"
+                        placeholder="Ingresa un correo electronico" />
+                </div>
+                <div class="w-full">
+                    <label for="status" class="block mb-1 font-semibold w-full">Asigna un Status</label>
+                    <p-select [options]="listStatus" formControlName="status" optionValue="nameKey" optionLabel="name" [filter]="true"
+                        filterBy="name" [showClear]="true" placeholder="Seleccione un Estado"
+                        class="flex-auto w-full py-2" />
+                </div>
+            </section>
+            <section class=" mt-5 flex flex-row gap-4 mt-10">
+                <div class="w-full">
+                    <label for="address" class="block mb-1 font-semibold w-full">Dirección</label>
+                    <textarea formControlName="address" pInputText rows="3" cols="10" class="flex-auto w-full py-4"
+                    pTextarea placeholder="Ingresa la dirección del proveedor"></textarea>
+                </div>
+            </section>
+            <div class="flex justify-end gap-2 mt-15">
+                <p-button label="Cancelar" severity="secondary" (click)="closeDialog()" />
+                <p-button [label]="isEditForm ? 'Editar' : 'Guardar'" (click)="onSubmitProvider($event)"  />
+            </div>
+            <br>
+        </form>
+    </p-dialog>
+</div>
+<p-toast />
+<p-confirmdialog />

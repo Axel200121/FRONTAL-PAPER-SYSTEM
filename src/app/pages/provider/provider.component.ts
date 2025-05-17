@@ -8,6 +8,9 @@ import { StatusTranslatePipe } from '../../pipes/StatusTranslatePipe ';
 import { SelectModule } from 'primeng/select';
 import { ProviderService } from './service/provider.service';
 import { ProviderDto } from '../../interfaces/provider.dto';
+import { StatusRegisterDto } from '../../interfaces/status.register.dto';
+import { ApiResponseDto } from '../../interfaces/api.response.dto';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-provider',
@@ -21,30 +24,101 @@ import { ProviderDto } from '../../interfaces/provider.dto';
     StatusTranslatePipe,
     SelectModule,
   ],
+  providers:[MessageService,ConfirmationService],
   templateUrl: './provider.component.html',
   styleUrl: './provider.component.scss'
 })
 export class ProviderComponent implements OnInit {
 
   //*  variables para el DataTable y su paginación
-    public listProviders!: ProviderDto[];
-    public isVisibleTable: boolean = true;
-    public totalRecords: number = 0;
-    public loading: boolean = false;
-    public rows: number = 5;
-    public first: number = 0;
+  public listProviders!: ProviderDto[];
+  public isVisibleTable: boolean = true;
+  public totalRecords: number = 0;
+  public loading: boolean = false;
+  public rows: number = 5;
+  public first: number = 0;
+
+  //* Variables para filtrar información
+  public listProvidersBySelect!: ProviderDto[]
+  public selectedProvider: string = ''
+  public selectedStatus: string  = ''
+  public listStatus: StatusRegisterDto[] = [
+        {
+          nameKey: 'ACTIVE',
+          name: 'Activado',
+        },
+        {
+          nameKey: 'INACTIVE',
+          name: 'Inactivo',
+        },
+        {
+          nameKey: 'PENDING',
+          name: 'Pediente',
+        },
+        {
+          nameKey: 'DELETED',
+          name: 'Eliminado',
+        },
+    ]
+  
+
 
 
   constructor(
-    private providerService:ProviderService
+    private providerService:ProviderService,
+    private confirmationService: ConfirmationService,
+    private messageService: MessageService,
   ){}
+
+
+
   ngOnInit(): void {
    this.executeGetListProviders()
+   this.executeGetProvidersBySelect()
   }
 
 
   /**
-     * TODO: FUCNIONES PARA LISTAS CATEGORIAS
+     * TODO: MEOTODOS PARA FILTRAR INFORMACIÓN
+     */
+  
+    private executeGetProvidersBySelect(){
+      this.providerService.executeListProvidersBySelect().subscribe({
+        next: (response)=>{
+          this.listProvidersBySelect =  response.data
+        },
+        error:(error)=>{
+          const response: ApiResponseDto = error.error;
+          this.toast('error', 'Ocurrio un problema!', error.error.description);
+        }
+      })
+    }
+  
+    public filterDataTable(provider?: string, status?: string) {
+      this.loadProviders(provider, status);
+    }
+  
+    public clearDataFilter() {
+      this.loadProviders()
+      this.selectedProvider = ''
+      this.selectedStatus = ''
+    }
+  
+    /**
+     * TODO: USANDO TOAST
+     */
+  
+    private toast(severity: string, summary: string, detail: string) {
+      this.messageService.add({
+        severity: severity,
+        summary: summary,
+        detail: detail,
+      });
+      setTimeout;
+    }
+
+  /**
+     * TODO: FUCNIONES PARA LISTAS PROVEEDORES
      */
     private executeGetListProviders(page = 0, size = 5, idProvider?:string, status?:string){
       this.providerService.executeListProviders(page,size,idProvider,status).subscribe({

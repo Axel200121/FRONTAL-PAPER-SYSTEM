@@ -46,7 +46,6 @@ export class MenuComponent {
         {
             label: 'Gestion Productos',
             icon: 'pi pi-fw pi-briefcase',
-            routerLink: ['/pages'],
             items: [
                 {
                     label: 'Categorias',
@@ -56,7 +55,7 @@ export class MenuComponent {
                 {
                     label: 'Prodcutos',
                     icon: 'pi pi-fw pi-pencil',
-                    routerLink: ['/pages/crud']
+                    routerLink: ['/home/products']
                 },
                 {
                     label: 'Invetario',

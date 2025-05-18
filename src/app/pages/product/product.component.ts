@@ -5,7 +5,7 @@ import { ProductService } from './service/product.service';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { StatusTranslatePipe } from '../../pipes/StatusTranslatePipe ';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { ApiResponseDto } from '../../interfaces/api.response.dto';
 import { CategoryDto } from '../../interfaces/category.dto';
 import { StatusRegisterDto } from '../../interfaces/status.register.dto';
@@ -21,8 +21,13 @@ import { ToastModule } from 'primeng/toast';
 import { ValidateInputDto } from '../../interfaces/validate.input.dto';
 import { InputNumber } from 'primeng/inputnumber';
 import { Fluid } from 'primeng/fluid';
+import { SpeedDial } from 'primeng/speeddial';
+import { CommonModule } from '@angular/common';
+import { FileUpload } from 'primeng/fileupload';
+
 @Component({
   selector: 'app-product',
+  standalone: true,
   imports: [
     TableModule,
     ButtonModule,
@@ -36,8 +41,12 @@ import { Fluid } from 'primeng/fluid';
     DialogModule,
     ConfirmDialogModule,
     ToastModule,
-    InputNumber, 
-    Fluid
+    InputNumber,
+
+    //* imports para carga excel
+    SpeedDial,
+    FileUpload,
+    CommonModule
   ],
   providers:[MessageService,ConfirmationService],
   templateUrl: './product.component.html',
@@ -106,6 +115,10 @@ export class ProductComponent  implements OnInit{
   public listValidateInputs: ValidateInputDto[]=[]
   public messageErrorForm : string = ''
 
+  //* varioables par aun button spedial
+  public items: MenuItem[] = []
+  public isVisibleFormUpload : boolean = false
+  public uploadedFiles: any[] = [];
   constructor(
     private productService:ProductService,
     private categoryService:CategoryService,
@@ -121,6 +134,46 @@ export class ProductComponent  implements OnInit{
       this.executeGetProductsBySelect()
       this.executeGetProvidersBySelect()
       this.initFormProduct()
+      this.items = [
+            {
+                icon: 'pi pi-upload',
+                command: ()=>{this.showModalUpload()}
+            },
+        ];
+  }
+
+  /**
+   * TODO: FUCNIONES EXTRAS BUTTON SPIDIAL
+   */
+
+
+   handleUpload(event: any) {
+    const file: File = event.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.productService.importProductsFromExcel(formData)
+      .subscribe({
+        next: (response) => {
+          this.toast('success', 'Carga exitosa!', response.message);
+          this.isVisibleFormUpload = false
+          this.loadProducts()
+          // Aquí puedes cerrar el diálogo, mostrar un toast, etc.
+        },
+        error: (error) => {
+          console.error('Error al subir archivo', error);
+          // Aquí puedes mostrar un mensaje de error
+        }
+      });
+  }
+
+  
+  public showModalUpload(){
+    this.isVisibleFormUpload = true
+  }
+
+  public closeModalUpload(){
+    this.isVisibleFormUpload = false
   }
 
   /**

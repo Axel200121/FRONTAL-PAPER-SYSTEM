@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card relaive">
     <div class="font-semibold text-3xl mb-4">
         Panel de Control de Productos
     </div>
@@ -87,8 +87,10 @@
         </p-table>
     </div>
 </div>
-
-
+<div>
+    <p-toast />
+    <p-speeddial [model]="items" direction="up"  [style]="{ position: 'fixed',bottom: '3rem',right: '1.5rem'}" [buttonStyle]="{width:'3rem', height:'3rem'}"/>
+</div>
 
 <div class=" flex justify-center">
     <p-dialog [header]="isEditForm ? 'EDITAR PRODUCTO' : 'NUEVO PRODUCTO'" [modal]="true" [(visible)]="isVisibleForm" [style]="{ width: '50rem' }">
@@ -172,5 +174,20 @@
         </form>
     </p-dialog>
 </div>
-<p-toast />
+
+<div class=" flex justify-center">
+    <p-dialog [header]="'📦 CARGA MASIVA DE PRODUCTOS'" [modal]="true" [(visible)]="isVisibleFormUpload" [style]="{ width: '40rem' }">
+        <p-fileUpload
+    name="file"
+    accept=".xlsx, .xls"
+    mode="advanced"
+    [auto]="false"
+    [customUpload]="true"
+    chooseLabel="Seleccionar archivo"
+    uploadLabel="Subir"
+    cancelLabel="Cancelar"
+    (uploadHandler)="handleUpload($event)">
+  </p-fileUpload>
 <p-confirmdialog />
+
+

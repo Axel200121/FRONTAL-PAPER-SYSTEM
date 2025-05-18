@@ -55,4 +55,11 @@ export class ProductService {
     const url = `${this.url}/products/delete/${idProduct}`
     return this.http.delete<ApiResponseDto>(url)
   }
+
+  public importProductsFromExcel(file:FormData):Observable<ApiResponseDto>{
+
+
+    const url = `${this.url}/products/upload`
+    return this.http.post<ApiResponseDto>(url,file)
+  }
 }

@@ -19,7 +19,7 @@ export class ProductService {
     .set('page', page.toString())
     .set('size', size.toString())
 
-    if (status || idProvider) {
+    if (status || idProduct || idCategory || idProvider) {
       params = params
       .set('idProduct', idProduct!.toString())
       .set('idCategory', idCategory!.toString())

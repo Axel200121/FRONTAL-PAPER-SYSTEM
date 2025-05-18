@@ -12,7 +12,15 @@ export class StatusTranslatePipe implements PipeTransform {
         PENDING: 'Pendiente',
         INACTIVE: 'Inactivo',
         DELETED: 'Eliminado',
-        BLOCKED: 'Bloqueado'
+        BLOCKED: 'Bloqueado',
+
+        //status product 
+        OUT_OF_STOCK:'Agotado',
+        PENDING_REPLENISHMENT:'Pendiente de reposición',
+        DISCOUNTED:'Descontado',
+        WITHDRAWN:'Retirado',
+        IN_PRODUCTION:'En producción',
+        IN_TRANSIT:'En transito',
     };
     return translations[status] || status;
   }

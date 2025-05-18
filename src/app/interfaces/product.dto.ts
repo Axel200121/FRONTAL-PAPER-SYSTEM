@@ -9,7 +9,7 @@ export interface ProductDto {
     buyPrice?:number
     salePrice?:number
     stock?:number
-    minimumStcok?:number
+    minimumStock?:number
     urlImage?:string
     status?:string
     category?:CategoryDto

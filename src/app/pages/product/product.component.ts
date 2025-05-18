@@ -138,6 +138,8 @@ export class ProductComponent  implements OnInit{
   
     public clearDataFilter() {
       this.loadProducts()
+      this.selectedProduct = ''
+      this.selectedProvider = ''
       this.selectedCategory = ''
       this.selectedStatus = ''
     }
